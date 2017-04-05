@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CountMeIn</string>
+    <string name="facebook_app_id">403716676658006</string>
+    <string name="title_activity_home">HomeActivity</string>
+</resources>
