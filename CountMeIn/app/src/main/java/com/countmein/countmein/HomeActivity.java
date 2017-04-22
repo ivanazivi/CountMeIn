@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -64,7 +65,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 Toast toast = Toast.makeText(getApplicationContext(), selected1, Toast.LENGTH_SHORT);
                 toast.show();
-                 Intent i = new Intent(HomeActivity.this, SelectedActivity.class);
+                Intent i = new Intent(HomeActivity.this, SelectedActivity.class);
                 i.putExtra("naslov", selected1);
                 i.putExtra("opis", selected2);
 

@@ -2,6 +2,7 @@ package com.countmein.countmein;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import java.util.List;
  * Created by Home on 4/13/2017.
  */
 
-public class ChatRoomAdapter extends ArrayAdapter<Chat> {
+public class ChatRoomAdapter  extends ArrayAdapter<Chat> {
 
     public ChatRoomAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
