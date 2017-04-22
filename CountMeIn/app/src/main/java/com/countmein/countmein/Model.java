@@ -7,13 +7,13 @@ import java.util.Date;
  * Created by Home on 4/13/2017.
  */
 
-public class Chat {
+public class Model {
 
     private String naslov;
     private String opis;
     private Date datum;
 
-    public Chat(String naslov, String opis, Date datum) {
+    public Model(String naslov, String opis, Date datum) {
         this.naslov = naslov;
         this.opis = opis;
         this.datum = datum;
@@ -35,7 +35,7 @@ public class Chat {
         this.datum = datum;
     }
 
-    public Chat() {
+    public Model() {
 
 
     }

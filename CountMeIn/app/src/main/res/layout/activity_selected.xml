@@ -35,6 +35,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/datum"
         />
+        <include
+
+            layout="@layout/chatlayout" />
     </LinearLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>

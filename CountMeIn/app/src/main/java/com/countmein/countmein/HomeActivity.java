@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -35,7 +33,7 @@ public class HomeActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
 
-        List<Chat> podaci=getData();
+        List<Model> podaci=getData();
 
         final ListView lv = (ListView) findViewById(R.id.list);
 
@@ -89,34 +87,26 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-    public List<Chat> getData(){
+    public List<Model> getData(){
 
-        Chat c1=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
-        Chat c2=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
-        Chat c3=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
-        Chat c4=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
-        Chat c5=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
-        Chat c6=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
-        Chat c7=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
-        Chat c8=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
-        Chat c9=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
-        Chat c10=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
+        Model c1=new Model("Rodjendan 1","Ovo je rodjendan", new Date());
+        Model c2=new Model("Rodjendan 1","Ovo je rodjendan", new Date());
+        Model c3=new Model("Rodjendan 1","Ovo je rodjendan", new Date());
+        Model c4=new Model("Rodjendan 1","Ovo je rodjendan", new Date());
+        Model c5=new Model("Rodjendan 1","Ovo je rodjendan", new Date());
 
-        Chat c11=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
 
-        Chat c12=new Chat("Rodjendan 1","Ovo je rodjendan", new Date());
+        Model c11=new Model("Rodjendan 1","Ovo je rodjendan", new Date());
 
-        ArrayList<Chat> lista= new ArrayList<Chat>();
+        Model c12=new Model("Rodjendan 1","Ovo je rodjendan", new Date());
+
+        ArrayList<Model> lista= new ArrayList<Model>();
         lista.add(c1);
         lista.add(c2);
         lista.add(c3);
         lista.add(c4);
         lista.add(c5);
-        lista.add(c6);
-        lista.add(c7);
-        lista.add(c8);
-        lista.add(c9);
-        lista.add(c10);
+
         lista.add(c11);
         return lista;
 

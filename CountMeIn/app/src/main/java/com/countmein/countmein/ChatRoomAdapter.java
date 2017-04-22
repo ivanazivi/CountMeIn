@@ -1,8 +1,6 @@
 package com.countmein.countmein;
 
-import android.content.ClipData;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +13,13 @@ import java.util.List;
  * Created by Home on 4/13/2017.
  */
 
-public class ChatRoomAdapter  extends ArrayAdapter<Chat> {
+public class ChatRoomAdapter  extends ArrayAdapter<Model> {
 
     public ChatRoomAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
     }
 
-    public ChatRoomAdapter(Context context, int resource, List<Chat> items) {
+    public ChatRoomAdapter(Context context, int resource, List<Model> items) {
         super(context, resource, items);
     }
 
@@ -36,12 +34,15 @@ public class ChatRoomAdapter  extends ArrayAdapter<Chat> {
             v = vi.inflate(R.layout.singlerow, null);
         }
 
-        Chat p  = getItem(position);
+        Model p  = getItem(position);
 
         if (p != null) {
             TextView tt1 = (TextView) v.findViewById(R.id.naslov);
             TextView tt2 = (TextView) v.findViewById(R.id.opis);
             TextView tt3 = (TextView) v.findViewById(R.id.datum);
+
+
+
 
             if (tt1 != null) {
                 tt1.setText(p.getNaslov());
