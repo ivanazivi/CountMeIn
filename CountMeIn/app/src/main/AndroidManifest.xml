@@ -38,9 +38,10 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SelectedActivity" />
-        <activity
-            android:name=".aaaaa"
-            android:label="@string/title_activity_aaaaa"></activity>
+        <activity android:name=".EmailPasswordActivity" />
+        <activity android:name=".GoogleSignInActivity" />
+
+
     </application>
 
 </manifest>
