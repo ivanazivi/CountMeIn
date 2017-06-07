@@ -22,16 +22,16 @@ public class GroupBean extends  BaseModel implements Serializable{
 
     public String topictoken;
 
-    public GroupBean(String name, String description, List<User> friends) {
+    public GroupBean(String name, String description, List<UserBean> friends) {
         this.name = name;
         this.description = description;
         this.friends = friends;
 
     }
 
-    public List<User> friends;
+    public List<UserBean> friends;
 
-    public GroupBean(String id,String name, String description, List<User> friends,String topictoken) {
+    public GroupBean(String id, String name, String description, List<UserBean> friends, String topictoken) {
         super(id);
         this.name = name;
         this.description = description;
@@ -58,11 +58,11 @@ public class GroupBean extends  BaseModel implements Serializable{
         this.description = description;
     }
 
-    public List<User> getFriends() {
+    public List<UserBean> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<User> friends) {
+    public void setFriends(List<UserBean> friends) {
         this.friends = friends;
     }
 }

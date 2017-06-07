@@ -62,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         setContentView(R.layout.activity_chooser);
 
-      //  Bugsnag.init(this);
-
         // Set up ListView and Adapter
         ListView listView = (ListView) findViewById(R.id.list_view);
 

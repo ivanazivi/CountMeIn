@@ -1,38 +1,36 @@
 package com.countmein.countmein.beans;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by Home on 5/20/2017.
  */
 
-public class User extends BaseModel implements Serializable {
-    public User(String id,String username, String photoUrl) {
+public class UserBean extends BaseModel implements Serializable {
+
+    private String token;
+    private String username;
+    private String photoUrl;
+    private String email;
+
+    public UserBean() {
+    }
+
+
+    public UserBean(String id, String username, String photoUrl, String email) {
         super(id);
         this.username = username;
         this.photoUrl = photoUrl;
+        this.email = email;
     }
-    private String tokens;
 
-    private String username;
 
-    public User(String id,String username, String photoUrl,String tokens){
+    public UserBean(String id, String username, String photoUrl, String token, String email){
         super(id);
         this.username=username;
         this.photoUrl=photoUrl;
-        this.tokens=tokens;
-    }
-
-    public String getTokens() {
-        return tokens;
-    }
-
-    public void setTokens(String tokens) {
-        this.tokens = tokens;
-    }
-
-    public User() {
+        this.token=token;
+        this.email = email;
     }
 
     @Override
@@ -48,9 +46,9 @@ public class User extends BaseModel implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        User user = (User) o;
+        UserBean userBean = (UserBean) o;
 
-        return getId().equals(user.getId());
+        return getId().equals(userBean.getId());
 
     }
 
@@ -71,5 +69,19 @@ public class User extends BaseModel implements Serializable {
         this.photoUrl = photoUrl;
     }
 
-    private String photoUrl;
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

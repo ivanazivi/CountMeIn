@@ -1,6 +1,5 @@
 package com.countmein.countmein.fragments.group;
 
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 
 import com.countmein.countmein.R;
 import com.countmein.countmein.beans.GroupBean;
-import com.countmein.countmein.beans.User;
+import com.countmein.countmein.beans.UserBean;
 import com.countmein.countmein.holders.PeopleViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,18 +36,18 @@ public class GroupFriendFragment extends Fragment {
     public  View rootView;
 
     protected RecyclerView mRecyclerView;
-    private FirebaseRecyclerAdapter<User,PeopleViewHolder> adapter;
+    private FirebaseRecyclerAdapter<UserBean,PeopleViewHolder> adapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
-    public List<User> getSelectedusers() {
+    public List<UserBean> getSelectedusers() {
         return selectedusers;
     }
 
-    public void setSelectedusers(List<User> selectedusers) {
+    public void setSelectedusers(List<UserBean> selectedusers) {
         this.selectedusers = selectedusers;
     }
 
-    List<User> selectedusers;
+    List<UserBean> selectedusers;
 
     public  GroupFriendFragment() {
         // Required empty public constructor
@@ -80,11 +79,11 @@ public class GroupFriendFragment extends Fragment {
             e.printStackTrace();
         }
 
-        adapter  = new FirebaseRecyclerAdapter<User,PeopleViewHolder>(User.class,
+        adapter  = new FirebaseRecyclerAdapter<UserBean,PeopleViewHolder>(UserBean.class,
                 R.layout.people_card_view,PeopleViewHolder.class, FirebaseDatabase.getInstance().getReference().child("userfriends").child(FirebaseAuth.getInstance().getCurrentUser().getUid())){
 
             @Override
-            protected void populateViewHolder(final PeopleViewHolder viewHolder, User model, int position) {
+            protected void populateViewHolder(final PeopleViewHolder viewHolder, UserBean model, int position) {
                 viewHolder.messageUser.setText(model.getUsername());
                 viewHolder.userPhoto.setImageURI(model.getPhotoUrl());
                 viewHolder.button.setVisibility(View.GONE);
@@ -107,13 +106,13 @@ public class GroupFriendFragment extends Fragment {
                 viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        User user=(User) v.getTag();
+                        UserBean userBean =(UserBean) v.getTag();
 
                         boolean checked = ((CheckBox) v).isChecked();
                         if(checked){
                             Log.d("clickListener", "checked");
 
-                            selectedusers.add(user);
+                            selectedusers.add(userBean);
                         }else {
                             if(selectedusers.size()==1){
                                 Toast.makeText(getActivity(), "You need to have at least one friend selected!", Toast.LENGTH_LONG).show();
@@ -122,7 +121,7 @@ public class GroupFriendFragment extends Fragment {
                             }else{
 
                                 for(int i=0;i<selectedusers.size();i++){
-                                    if(user.getId().equals(selectedusers.get(i).getId())){
+                                    if(userBean.getId().equals(selectedusers.get(i).getId())){
                                         Log.d("clickListener","removed");
                                         selectedusers.remove(i);
                                     }

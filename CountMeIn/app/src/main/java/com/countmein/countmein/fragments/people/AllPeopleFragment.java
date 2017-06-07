@@ -11,9 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.countmein.countmein.R;
-import com.countmein.countmein.activities.HomeActivity;
 import com.countmein.countmein.activities.HomeActivity_;
-import com.countmein.countmein.beans.User;
+import com.countmein.countmein.beans.UserBean;
 import com.countmein.countmein.holders.PeopleViewHolder;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -29,7 +28,7 @@ public class AllPeopleFragment  extends Fragment {
 
 
     protected RecyclerView mRecyclerView;
-    private FirebaseRecyclerAdapter<User,PeopleViewHolder> adapter;
+    private FirebaseRecyclerAdapter<UserBean,PeopleViewHolder> adapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
     public  AllPeopleFragment() {
@@ -53,11 +52,11 @@ public class AllPeopleFragment  extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        adapter  = new FirebaseRecyclerAdapter<User,PeopleViewHolder>(User.class,
+        adapter  = new FirebaseRecyclerAdapter<UserBean,PeopleViewHolder>(UserBean.class,
                 R.layout.people_card_view,PeopleViewHolder.class, FirebaseDatabase.getInstance().getReference().child("users")) {
 
             @Override
-            protected void populateViewHolder(final PeopleViewHolder viewHolder, User model, int position) {
+            protected void populateViewHolder(final PeopleViewHolder viewHolder, UserBean model, int position) {
                 if(FirebaseAuth.getInstance().getCurrentUser().getUid()==model.getId()){
                     viewHolder.cv.setVisibility(View.GONE);
                     viewHolder.cv.setLayoutParams(new RelativeLayout.LayoutParams(0, 0));

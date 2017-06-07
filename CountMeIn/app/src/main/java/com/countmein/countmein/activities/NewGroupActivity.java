@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.countmein.countmein.R;
 import com.countmein.countmein.beans.GroupBean;
-import com.countmein.countmein.beans.User;
+import com.countmein.countmein.beans.UserBean;
 import com.countmein.countmein.fragments.group.GroupFriendFragment;
 import com.countmein.countmein.fragments.group.NewGroupDetailsFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -95,7 +95,7 @@ public class NewGroupActivity extends AppCompatActivity {
 
                 String gName = null;
                 String gDesc = null;
-                List<User> selectedusers=new ArrayList<User>();
+                List<UserBean> selectedusers=new ArrayList<UserBean>();
                 GroupBean group;
 
                 GroupBean newGroup;
@@ -128,7 +128,7 @@ public class NewGroupActivity extends AppCompatActivity {
 
                             try {
 
-                                selectedusers=new ArrayList<User>();
+                                selectedusers=new ArrayList<UserBean>();
                                 gDesc=newGroupDetailsFragment.gDesc.getText().toString();
                                 gName=newGroupDetailsFragment.gName.getText().toString();
                                 selectedusers=peopleFragment.getSelectedusers();

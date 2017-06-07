@@ -11,16 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
 import com.countmein.countmein.R;
 import com.countmein.countmein.beans.ActivityBean;
-import com.countmein.countmein.beans.BaseModel;
 import com.countmein.countmein.beans.JustId;
-import com.countmein.countmein.beans.MockUpActivity;
-import com.countmein.countmein.beans.User;
-import com.countmein.countmein.holders.ActivityViewHolder;
+import com.countmein.countmein.beans.UserBean;
 import com.countmein.countmein.holders.PeopleViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,12 +23,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,8 +75,8 @@ public class AttendingMyActFragment extends DialogFragment {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            viewHolder.messageUser.setText(dataSnapshot.getValue(User.class).getUsername());
-                            viewHolder.userPhoto.setImageURI(dataSnapshot.getValue(User.class).getPhotoUrl());
+                            viewHolder.messageUser.setText(dataSnapshot.getValue(UserBean.class).getUsername());
+                            viewHolder.userPhoto.setImageURI(dataSnapshot.getValue(UserBean.class).getPhotoUrl());
 
                         }
 

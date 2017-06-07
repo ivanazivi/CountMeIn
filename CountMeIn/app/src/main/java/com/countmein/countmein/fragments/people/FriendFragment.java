@@ -9,14 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.countmein.countmein.R;
-import com.countmein.countmein.activities.HomeActivity;
 
 import com.countmein.countmein.activities.HomeActivity_;
-import com.countmein.countmein.beans.User;
+import com.countmein.countmein.beans.UserBean;
 import com.countmein.countmein.holders.PeopleViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 
@@ -25,7 +23,7 @@ public class FriendFragment extends Fragment {
 
 
     protected RecyclerView mRecyclerView;
-    private FirebaseRecyclerAdapter<User,PeopleViewHolder> adapter;
+    private FirebaseRecyclerAdapter<UserBean,PeopleViewHolder> adapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
     public FriendFragment() {
@@ -53,11 +51,11 @@ public class FriendFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        adapter  = new FirebaseRecyclerAdapter<User,PeopleViewHolder>(User.class,
+        adapter  = new FirebaseRecyclerAdapter<UserBean,PeopleViewHolder>(UserBean.class,
                 R.layout.people_card_view,PeopleViewHolder.class, FirebaseDatabase.getInstance().getReference().child("userfriends").child(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
             @Override
-            protected void populateViewHolder(PeopleViewHolder viewHolder, User model, int position) {
+            protected void populateViewHolder(PeopleViewHolder viewHolder, UserBean model, int position) {
 
                 viewHolder.messageUser.setText(model.getUsername());
                 viewHolder.userPhoto.setImageURI(model.getPhotoUrl());

@@ -13,18 +13,14 @@ import android.widget.EditText;
 
 import com.countmein.countmein.R;
 import com.countmein.countmein.activities.MainActivity;
-import com.countmein.countmein.beans.User;
+import com.countmein.countmein.beans.UserBean;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,7 +29,7 @@ public class SettingsFragment extends Fragment {
 
     View rootView;
     private FirebaseUser ccUser;
-    private User user;
+    private UserBean userBean;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -52,9 +48,9 @@ public class SettingsFragment extends Fragment {
                 .child(ccUser.getUid()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        user = dataSnapshot.getValue(User.class);
+                        userBean = dataSnapshot.getValue(UserBean.class);
                         try {
-                            ((EditText) rootView.findViewById(R.id.giveNickname)).setText(user.getUsername());
+                            ((EditText) rootView.findViewById(R.id.giveNickname)).setText(userBean.getUsername());
                         }catch (Exception e)
                         {
                             e.printStackTrace();
@@ -73,10 +69,10 @@ public class SettingsFragment extends Fragment {
             public void onClick(View v) {
                 String newName = ((EditText) rootView.findViewById(R.id.giveNickname)).getText().toString();
                 CheckBox boxDel = (CheckBox) rootView.findViewById(R.id.checkbox_delete_acnt);
-                user.setUsername(newName);
+                userBean.setUsername(newName);
                 FirebaseDatabase.getInstance().getReference()
                         .child("users")
-                        .child(ccUser.getUid()).setValue(user);
+                        .child(ccUser.getUid()).setValue(userBean);
 
                 if(boxDel.isChecked()){
                     FirebaseAuth.getInstance().signOut();

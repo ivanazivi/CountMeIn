@@ -21,7 +21,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.countmein.countmein.R;
-import com.countmein.countmein.beans.User;
+import com.countmein.countmein.beans.UserBean;
 import com.countmein.countmein.dao.UserDao;
 import com.countmein.countmein.eventBus.event.UsersLoadedEvent;
 import com.countmein.countmein.fragments.AboutFragment;
@@ -67,22 +67,20 @@ public class HomeActivity extends AppCompatActivity
     @Bean
     UserDao userDao;
 
-
     @AfterViews
     public void create() {
         userDao.init();
         final FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
         if (userDao.userExists(userFirebase.getUid())) {
-            userDao.setCurrentUser(userDao.getUserById(userFirebase.getUid()));
+            userDao.setCurrentUserBean(userDao.getUserById(userFirebase.getUid()));
         } else {
-            final User user = new User(userFirebase.getUid(), userFirebase.getDisplayName(), userFirebase.getPhotoUrl().toString(), FirebaseInstanceId.getInstance().getToken());
-            userDao.write(user);
-            userDao.setCurrentUser(user);
+            final UserBean userBean = new UserBean(userFirebase.getUid(), userFirebase.getDisplayName(), userFirebase.getPhotoUrl().toString(), FirebaseInstanceId.getInstance().getToken(),userFirebase.getEmail());
+            userDao.write(userBean);
+            userDao.setCurrentUserBean(userBean);
         }
 
         ActivitiesFragment fragment = new ActivitiesFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-                .beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
 
@@ -101,13 +99,11 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
 
         navigationView.setNavigationItemSelectedListener(this);
         View hView = navigationView.getHeaderView(0);
@@ -118,10 +114,7 @@ public class HomeActivity extends AppCompatActivity
         nav_email.setText(userFirebase.getEmail());
 
         SimpleDraweeView nav_image = (SimpleDraweeView)hView.findViewById(R.id.navImageView);
-      //  nav_image.setImageURI(null);
         nav_image.setImageURI(userFirebase.getPhotoUrl());
-
-        // simpleDraweeView.setImageURI(userFirebase.getPhotoUrl().toString());
 
         //Getting location for camera position
         if (mGoogleApiClient == null) {
@@ -148,11 +141,11 @@ public class HomeActivity extends AppCompatActivity
     public void userLoaded(UsersLoadedEvent event) {
         final FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
         if (userDao.userExists(userFirebase.getUid())) {
-            userDao.setCurrentUser(userDao.getUserById(userFirebase.getUid()));
+            userDao.setCurrentUserBean(userDao.getUserById(userFirebase.getUid()));
         } else {
-            final User user = new User(userFirebase.getUid(), userFirebase.getDisplayName(), userFirebase.getPhotoUrl().toString());
-            userDao.write(user);
-            userDao.setCurrentUser(user);
+            final UserBean userBean = new UserBean(userFirebase.getUid(), userFirebase.getDisplayName(), userFirebase.getPhotoUrl().toString(),userFirebase.getEmail());
+            userDao.write(userBean);
+            userDao.setCurrentUserBean(userBean);
         }
 
     }
@@ -168,44 +161,17 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-  /*  @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.nav_drawer, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if(id == R.id.nav_home) {
             InvitedFragment fragment =new InvitedFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.addToBackStack("mainFragment");
             fragmentTransaction.commit();
-
-
-
-
         } else if (id == R.id.nav_my_activities) {
 
             ActivitiesFragment fragment = new ActivitiesFragment();

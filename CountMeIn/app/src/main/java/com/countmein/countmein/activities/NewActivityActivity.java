@@ -143,23 +143,6 @@ public class NewActivityActivity extends AppCompatActivity {
                             Intent jj = new Intent(NewActivityActivity.this, HomeActivity_.class);
                             startActivity(jj);
 
-                            int size = newAct.getGroup().size();
-                            ArrayList<String> tokens = new ArrayList<String>();
-                            for(int i=0; i<size; i++){
-                                for(int j=0; j<newAct.getGroup().get(i).getFriends().size(); j++){
-                                    String token  = newAct.getGroup().get(i).getFriends().get(j).getTokens();
-
-                                    System.out.print(FirebaseDatabase.getInstance().getReference().child("topics").child(newAct.getId()).equalTo(token));
-                                    //  if(FirebaseDatabase.getInstance().getReference().child("topics").child(newAct.getId()).equalTo(token) == null){
-                                    Log.d("If_exists","Doesn't exist");
-                                    FirebaseDatabase.getInstance().getReference().child("topics").child(newAct.getId()).push().setValue(token);
-                                    //  }
-                                    tokens.add(token);
-
-                                }
-                            }
-
-                            sendPushNotification(tokens);
                             finish();
                             break;
                     }
@@ -222,7 +205,7 @@ public class NewActivityActivity extends AppCompatActivity {
 
     @Background
     public void addNewActivityAsaChild(ActivityBean newAct){
-
+        ArrayList<String> tokens = new ArrayList<String>();
         String key = mDatabase.push().getKey();
         newAct.setId(key);
 
@@ -238,15 +221,12 @@ public class NewActivityActivity extends AppCompatActivity {
                 }
             }
         }
-
-
-
         int size = newAct.getGroup().size();
 
         for(int i=0; i<size; i++){
             Log.d("size", Integer.toString(newAct.getGroup().get(i).getFriends().size()));
             for(int j=0; j<newAct.getGroup().get(i).getFriends().size(); j++){
-                String token  = newAct.getGroup().get(i).getFriends().get(j).getTokens();
+                String token  = newAct.getGroup().get(i).getFriends().get(j).getToken();
                 Log.d("token",
                         FirebaseDatabase.getInstance().getReference().child("topics").child(newAct.getId()).child(token).toString());
                 //    if(FirebaseDatabase.getInstance().getReference().child("topics").child(newAct.getId()).child(token) == null){
@@ -257,6 +237,7 @@ public class NewActivityActivity extends AppCompatActivity {
 
             }
         }
+        sendPushNotification(tokens);
 
     }
 

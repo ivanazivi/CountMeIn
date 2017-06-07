@@ -1,6 +1,5 @@
 package com.countmein.countmein.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,19 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.countmein.countmein.R;
-import com.countmein.countmein.activities.HomeActivity;
 import com.countmein.countmein.activities.HomeActivity_;
-import com.countmein.countmein.activities.SelectedActivity;
 import com.countmein.countmein.beans.ActivityBean;
 import com.countmein.countmein.beans.JustId;
 import com.countmein.countmein.beans.MockUpActivity;
-import com.countmein.countmein.beans.User;
 import com.countmein.countmein.holders.ActivityViewHolder;
-import com.countmein.countmein.listeners.RecyclerItemClickListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,11 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class AttendingActivitiesFragment extends Fragment {
