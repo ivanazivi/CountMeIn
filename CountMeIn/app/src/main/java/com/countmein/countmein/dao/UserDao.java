@@ -28,7 +28,6 @@ import java.util.Map;
 public class UserDao {
 
     private static final String USERS_TAG = "users";
-    private static final String FRIENDS_TAG = "usersfriends";
 
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private Map<String, UserBean> users;

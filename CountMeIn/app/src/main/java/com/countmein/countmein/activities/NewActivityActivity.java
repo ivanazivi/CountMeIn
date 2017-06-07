@@ -48,7 +48,6 @@ public class NewActivityActivity extends AppCompatActivity {
     public int isEdit;
     private NewActivityActivity.SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-
     private NewActivityDetailsFragment newActivityDetailsFragment;
     private LocationFragment mapFragment;
     private GroupAddActivityFragment groupFragment;

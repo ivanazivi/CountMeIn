@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import com.countmein.countmein.R;
 import com.countmein.countmein.activities.HomeActivity_;
 import com.countmein.countmein.beans.ActivityBean;
-import com.countmein.countmein.beans.JustId;
+import com.countmein.countmein.beans.WhoAttendsBean;
 import com.countmein.countmein.beans.MockUpActivity;
 import com.countmein.countmein.holders.ActivityViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -103,7 +103,7 @@ public class AttendingActivitiesFragment extends Fragment {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        JustId appid = snapshot.getValue(JustId.class);
+                                        WhoAttendsBean appid = snapshot.getValue(WhoAttendsBean.class);
                                         if (appid.activityId.equals(model.getId())) {
                                             FirebaseDatabase.getInstance().getReference()
                                                     .child("whoisattending")

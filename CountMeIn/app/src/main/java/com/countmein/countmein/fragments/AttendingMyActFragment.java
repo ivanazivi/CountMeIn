@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.countmein.countmein.R;
 import com.countmein.countmein.beans.ActivityBean;
-import com.countmein.countmein.beans.JustId;
+import com.countmein.countmein.beans.WhoAttendsBean;
 import com.countmein.countmein.beans.UserBean;
 import com.countmein.countmein.holders.PeopleViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -34,7 +34,7 @@ public class AttendingMyActFragment extends DialogFragment {
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected List<ActivityBean> activities;
-    private FirebaseRecyclerAdapter<JustId,PeopleViewHolder > adapter;
+    private FirebaseRecyclerAdapter<WhoAttendsBean,PeopleViewHolder > adapter;
     private FirebaseUser ccUser;
     public String whoisattendingD;
 
@@ -62,11 +62,11 @@ public class AttendingMyActFragment extends DialogFragment {
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        adapter  = new FirebaseRecyclerAdapter<JustId,PeopleViewHolder >(JustId.class,
+        adapter  = new FirebaseRecyclerAdapter<WhoAttendsBean,PeopleViewHolder >(WhoAttendsBean.class,
                 R.layout.people_card_view,PeopleViewHolder.class, FirebaseDatabase.getInstance().getReference().child("whoisattending")) {
 
             @Override
-            protected void populateViewHolder(final PeopleViewHolder viewHolder, final JustId model, int position) {
+            protected void populateViewHolder(final PeopleViewHolder viewHolder, final WhoAttendsBean model, int position) {
 
 
                 if(selectedActivityId.equals(model.activityId)) {
