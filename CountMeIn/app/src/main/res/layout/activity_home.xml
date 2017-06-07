@@ -4,28 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.countmein.countmein.HomeActivity">
+    android:id="@+id/home_layout"
+    tools:context="com.countmein.countmein.activities.HomeActivity">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        />
-
-    <ListView
-        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="8dp">
-    </ListView>
+        android:orientation="vertical"
+        >
+        <include layout="@layout/toolbar"></include>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_container">
+
+        </FrameLayout>
+
     </LinearLayout>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -33,10 +28,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
 
-
         android:layout_margin="@dimen/fab_margin"
         android:tint="@android:color/white"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorAccent"
         app:srcCompat="@android:drawable/ic_input_add" />
+
 
 </android.support.design.widget.CoordinatorLayout>

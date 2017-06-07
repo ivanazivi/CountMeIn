@@ -1,9 +1,31 @@
 <resources>
     <string name="app_name">CountMeIn</string>
-    <string name="facebook_app_id">403716676658006</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="facebook_app_id">1678626569105465</string>
+    <string name="fb_login_protocol_scheme">fb1678626569105465</string>
+    <string name="title_activity_home">Home Activity</string>
     <string name="title_activity_aaaaa">Settings</string>
-
+    <string name="home">Home</string>
+    <string name="new_activity">New Activity</string>
+    <string name="new_group">New Group</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="date">Date</string>
+    <string name="activity_preview">Activity preview</string>
+    <string name="edit_activity">Edit activity</string>
+    <string name="edit_group">Edit group</string>
+    <string name="attending_activities">Attending activities</string>
+    <string name="my_activites">My activities</string>
+    <string name="my_friends">My friends</string>
+    <string name="my_groups">My groups</string>
+    <string name="search_people">Search people</string>
+    <string name="about">About</string>
+    <string name="app_version">Version 1.0.0</string>
+    <string name="allow_push_not">Allow push notifications</string>
+    <string name="delete_acount">Delete acount</string>
+    <string name="save">Save</string>
+    <string name="give_nickname">Give nickname</string>
+    <string name="inviting_activities">Invited activities</string>
+    <string name="show_who_attends">Show who is attending</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
@@ -134,4 +156,16 @@
     <string name="id_fmt">User ID: %s</string>
     <string name="email_fmt">Email: %s</string>
     <string name="title_activity_sadsdasasd">sadsdasasd</string>
+    <string name="title_activity_nav_drawer">NavDrawer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_facebook_login">FacebookLoginActivity</string>
+    <string name="title_activity_probni_tab_akt">probniTabAkt</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

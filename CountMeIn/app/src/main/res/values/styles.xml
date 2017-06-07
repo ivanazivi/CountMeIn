@@ -10,6 +10,22 @@
 
     </style>
 
+    <style name="userPhotoStyle">
+        <item name="android:layout_width">@dimen/image_medium_size</item>
+        <item name="android:layout_height">@dimen/image_medium_size</item>
+        <item name="android:layout_margin">@dimen/small_margin</item>
+    </style>
+    <style name="navUserPhotoStyle">
+        <item name="android:layout_width">@dimen/image_large_size</item>
+        <item name="android:layout_height">@dimen/image_large_size</item>
+        <item name="android:layout_margin">@dimen/medium_margin</item>
+    </style>
+
+    <style name="MyButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

@@ -2,15 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/miCompose"
-        android:icon="@drawable/ic_info_black_24dp"
-        app:showAsAction="ifRoom"
-        android:title="Compose">
-    </item>
-    <item
-        android:id="@+id/miProfile"
-        android:icon="@drawable/ic_info_black_24dp"
-        app:showAsAction="ifRoom|withText"
-        android:title="Profile">
-    </item>
+        android:id="@+id/miSave"
+        android:icon="@drawable/ic_check_white_36dp"
+        android:title="Save"
+        app:showAsAction="always"></item>
 </menu>
