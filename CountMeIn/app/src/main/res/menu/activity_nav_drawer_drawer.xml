@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_18dp"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_attending"
+            android:icon="@drawable/ic_star_black_18dp"
+            android:title="Attending" />
+    </group>
+
+    <group
+        android:id="@+id/menu_entities"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_activities"
+            android:icon="@drawable/ic_directions_run_black_18dp"
+            android:title="My Activities" />
+        <item
+            android:id="@+id/nav_my_friends"
+            android:icon="@drawable/ic_person_black_18dp"
+            android:title="My Friends" />
+        <item
+            android:id="@+id/nav_my_groups"
+            android:icon="@drawable/ic_group_black_18dp"
+            android:title="My Groups" />
+
+        <item
+            android:id="@+id/nav_all_people"
+            android:icon="@drawable/ic_group_black_18dp"
+            android:title="Search people" />
+    </group>
+
+    <group
+        android:id="@+id/menu_settings"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_settings_black_18dp"
+            android:title="Settings" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_library_books_black_18dp"
+            android:title="About" />
+        <item
+            android:id="@+id/nav_logout"
+            android:title="Log Out" />
+    </group>
+
+
+</menu>

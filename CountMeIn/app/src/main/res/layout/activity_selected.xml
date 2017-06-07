@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.countmein.countmein.activities.SelectedActivity">
+
+        <include android:id="@+id/toolbarlayout" layout="@layout/toolbar"></include>
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content"
+            android:id="@+id/naslov"
+            />
+        <TextView
+            android:layout_toRightOf="@id/naslov"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/opis"
+            />
+        <TextView
+            android:layout_toRightOf="@id/opis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/datum"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/fragment_selected_map">
+        </FrameLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/show_who_attends"
+          android:text="@string/show_who_attends"/>
+
+        <include android:id="@+id/chatinclude" layout="@layout/chatlayout" />
+
+</LinearLayout>

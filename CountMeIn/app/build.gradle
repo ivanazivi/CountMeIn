@@ -1,0 +1,100 @@
+apply plugin: 'com.android.application'
+
+
+
+apply plugin: 'android-apt'
+def AAVersion = '4.3.0'
+
+
+
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0].processResources.manifestFile
+        resourcePackageName 'com.countmein.countmein'
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+    }
+}
+
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.countmein.countmein"
+        minSdkVersion 17
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    ext.FBVersion = '10.0.1'
+    ext.AndroidVersion = '25.3.1'
+
+
+
+
+    compile "com.android.support:appcompat-v7:$AndroidVersion"
+    compile "com.android.support:design:$AndroidVersion"
+    compile "com.android.support:support-v4:$AndroidVersion"
+    compile "com.android.support:support-vector-drawable:$AndroidVersion"
+    compile "com.google.firebase:firebase-auth:$FBVersion"
+
+    compile "com.google.firebase:firebase-analytics:$FBVersion"
+    compile "com.google.firebase:firebase-core:$FBVersion"
+    compile "com.google.firebase:firebase-messaging:$FBVersion"
+    compile "com.google.firebase:firebase-database:$FBVersion"
+    compile "com.android.support:cardview-v7:$AndroidVersion"
+    compile "com.android.support:recyclerview-v7:$AndroidVersion"
+
+    apt "org.androidannotations:androidannotations:$AAVersion"
+    compile "org.androidannotations:androidannotations-api:$AAVersion"
+    apt "org.androidannotations:otto:$AAVersion"
+
+
+    // okhttp
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    // event bus
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+
+    compile 'com.squareup:otto:1.3.8'
+    compile 'com.facebook.fresco:fresco:1.3.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
+    compile 'com.firebaseui:firebase-ui:0.6.0'
+    compile 'com.bugsnag:bugsnag-android:3.+'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.google.android.gms:play-services-location:10.0.1'
+    testCompile 'junit:junit:4.12'
+
+
+}
+
+apply plugin: 'com.google.gms.google-services'
+
