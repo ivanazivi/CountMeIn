@@ -6,6 +6,7 @@
     <string name="title_activity_aaaaa">Settings</string>
     <string name="home">Home</string>
     <string name="new_activity">New Activity</string>
+    <string name="action_search">Search</string>
     <string name="new_group">New Group</string>
     <string name="name">Name</string>
     <string name="description">Description</string>

@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -48,6 +50,7 @@ public class AllPeopleFragment  extends Fragment {
         super.onCreate(savedInstanceState);
         newFriend = new HashMap<>();
         HomeActivity_.toolbar.setTitle("Search people");
+        setHasOptionsMenu(true);
 
     }
 
@@ -93,6 +96,11 @@ public class AllPeopleFragment  extends Fragment {
         mRecyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.menu_search, menu);
     }
 
 }
