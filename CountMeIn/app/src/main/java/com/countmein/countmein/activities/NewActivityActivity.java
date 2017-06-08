@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.countmein.countmein.R;
 import com.countmein.countmein.beans.ActivityBean;
-import com.countmein.countmein.beans.GroupBean;
 import com.countmein.countmein.fragments.group.GroupAddActivityFragment;
 import com.countmein.countmein.fragments.other.DatePickerFragment;
 import com.countmein.countmein.fragments.other.LocationFragment;
@@ -37,12 +36,14 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @EActivity(R.layout.activity_new_activity)
 public class NewActivityActivity extends AppCompatActivity {
-
-    private DatabaseReference mDatabase;
+    public static final String GROUPINACTIVITY = "groupinactivity";
+    private DatabaseReference mDatabaseActivity;
     private FirebaseUser ccUser;
     public  ActivityBean eActivity;
     public int isEdit;
@@ -52,6 +53,7 @@ public class NewActivityActivity extends AppCompatActivity {
     private LocationFragment mapFragment;
     private GroupAddActivityFragment groupFragment;
     private DatePickerFragment datePickerFragment;
+    public List<String> mapOfselectedGroups;
 
     @AfterViews
     void init(){
@@ -62,7 +64,7 @@ public class NewActivityActivity extends AppCompatActivity {
         groupFragment=new GroupAddActivityFragment();
         datePickerFragment = new DatePickerFragment();
         ccUser = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("useractivities").child(ccUser.getUid());
+        mDatabaseActivity = FirebaseDatabase.getInstance().getReference().child("useractivities").child(ccUser.getUid());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitle(R.string.new_activity);
@@ -114,27 +116,26 @@ public class NewActivityActivity extends AppCompatActivity {
                 DatePicker aDate = null;
                 double lLat = 0;
                 double lLng = 0;
-                List<GroupBean> list= new ArrayList<GroupBean>();
+                mapOfselectedGroups= new ArrayList<String>();
                 ActivityBean newAct;
 
                 if(isEdit != 1) {
                     switch (item.getItemId()) {
                         case R.id.miSave:
-
                             try {
-                                list=new ArrayList<GroupBean>();
+                                mapOfselectedGroups= new ArrayList<String>();
                                 aName = newActivityDetailsFragment.aName.getText().toString();
                                 aDesc = newActivityDetailsFragment.aDesc.getText().toString();
 
                                 aDate = datePickerFragment.aDate;
                                 lLng = MapFragment.mMarker.getPosition().longitude;
                                 lLat = MapFragment.mMarker.getPosition().latitude;
-                                list=groupFragment.getSelectedgroups();
+                                mapOfselectedGroups = groupFragment.getSelectedgroups();
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
 
-                            newAct = new ActivityBean(aName, aDesc, convertData(aDate), String.valueOf(lLat), String.valueOf(lLng),list);
+                            newAct = new ActivityBean(aName, aDesc, convertData(aDate), String.valueOf(lLat), String.valueOf(lLng));
                             addNewActivityAsaChild(newAct);
 
                             Toast.makeText(getApplicationContext(), "Activity was made successfully", Toast.LENGTH_SHORT).show();
@@ -149,22 +150,20 @@ public class NewActivityActivity extends AppCompatActivity {
                 {
                     switch (item.getItemId()) {
                         case R.id.miSave:
-
                             try {
-                                list=new ArrayList<GroupBean>();
-
+                                mapOfselectedGroups= new ArrayList<String>();
                                 aName = newActivityDetailsFragment.aName.getText().toString();
                                 aDesc = newActivityDetailsFragment.aDesc.getText().toString();
 
                                 aDate = datePickerFragment.aDate;
                                 lLng = MapFragment.mMarker.getPosition().longitude;
                                 lLat = MapFragment.mMarker.getPosition().latitude;
-                                list=groupFragment.getSelectedgroups();
+                                mapOfselectedGroups = groupFragment.getSelectedgroups();
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
 
-                            newAct = new ActivityBean(eActivity.getId(), aName, aDesc, convertData(aDate), String.valueOf(lLat), String.valueOf(lLng),list);
+                            newAct = new ActivityBean(eActivity.getId(), aName, aDesc, convertData(aDate), String.valueOf(lLat), String.valueOf(lLng));
                             updateActivity(newAct);
 
 
@@ -205,11 +204,20 @@ public class NewActivityActivity extends AppCompatActivity {
     @Background
     public void addNewActivityAsaChild(ActivityBean newAct){
         ArrayList<String> tokens = new ArrayList<String>();
-        String key = mDatabase.push().getKey();
+        Map<String,String> friendsInGroup = new HashMap<>();
+        Map<String,String> newGroupInActivity;
+        String key = mDatabaseActivity.push().getKey();
         newAct.setId(key);
 
-        mDatabase.child(key).setValue(newAct);
-        if(!newAct.getGroup().isEmpty()){
+        mDatabaseActivity.child(key).setValue(newAct);//dodavanje nove vrednosti
+
+        for(String groupId: mapOfselectedGroups) {
+            newGroupInActivity = new HashMap<>();
+            FirebaseDatabase.getInstance().getReference().child(GROUPINACTIVITY)
+                    .child(newAct.getId()).push().setValue(newGroupInActivity.put("id", groupId));
+        }
+
+     /*   if(!newAct.getGroup().isEmpty()){
             for(int i=0;i<newAct.getGroup().size();i++){
                 if(!newAct.getGroup().get(i).getFriends().isEmpty()){
                     for(int j=0;j<newAct.getGroup().get(i).getFriends().size();j++){
@@ -237,7 +245,7 @@ public class NewActivityActivity extends AppCompatActivity {
             }
         }
         sendPushNotification(tokens);
-
+*/
     }
 
     public void updateActivity(ActivityBean activity){

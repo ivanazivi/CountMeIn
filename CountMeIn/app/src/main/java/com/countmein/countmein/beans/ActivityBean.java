@@ -1,14 +1,8 @@
 package com.countmein.countmein.beans;
 
-import android.widget.BaseAdapter;
-
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.Exclude;
-
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,39 +16,26 @@ public class ActivityBean  extends BaseModel implements Serializable{
     public String date;
     public String lLng;
     public String lLat;
-    public List<GroupBean> group;
 
-    public MockUpActivity convertMockUp(){
-        return new MockUpActivity(this.getId(),this.getName(),this.getDescription());
+
+    public ActivityBean() {
     }
 
-    public ActivityBean(String name, String description, String date, String lLng, String lLat, List<GroupBean> group) {
+    public ActivityBean(String name, String description, String date, String lLng, String lLat) {
         this.name = name;
         this.description = description;
         this.date = date;
         this.lLng = lLng;
         this.lLat = lLat;
-        this.group = group;
     }
-    public ActivityBean(String id,String name, String description, String date, String lLng, String lLat, List<GroupBean> group) {
+
+    public ActivityBean(String id,String name, String description, String date, String lLng, String lLat) {
         super(id);
         this.name = name;
         this.description = description;
         this.date = date;
         this.lLng = lLng;
         this.lLat = lLat;
-        this.group = group;
-    }
-
-    public ActivityBean() {
-    }
-
-    public List<GroupBean> getGroup() {
-        return group;
-    }
-
-    public void setGroup(List<GroupBean> group) {
-        this.group = group;
     }
 
     public String getName() {
@@ -97,8 +78,11 @@ public class ActivityBean  extends BaseModel implements Serializable{
         this.lLat = lLat;
     }
 
-    @Exclude
+    public MockUpActivity convertMockUp(){
+        return new MockUpActivity(this.getId(),this.getName(),this.getDescription());
+    }
 
+    @Exclude
     public Map<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", this.getId());

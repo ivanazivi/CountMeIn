@@ -16,26 +16,33 @@ import android.widget.Toast;
 
 import com.countmein.countmein.R;
 import com.countmein.countmein.beans.GroupBean;
+import com.countmein.countmein.beans.IdBean;
 import com.countmein.countmein.beans.UserBean;
 import com.countmein.countmein.fragments.group.GroupFriendFragment;
 import com.countmein.countmein.fragments.group.NewGroupDetailsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NewGroupActivity extends AppCompatActivity {
 
+    public static final String  USERGROUP = "usergroup";
+    public static final String  FRIENDSINGROUP = "friendsingroup";
     NewGroupDetailsFragment newGroupDetailsFragment;
     GroupFriendFragment peopleFragment;
-
-
     private FirebaseDatabase mDatabase;
     private FirebaseUser ccUser;
     public GroupBean eGroup;
     public int isEdit;
+    public List<UserBean> selectedusers;
     private NewGroupActivity.SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
@@ -95,18 +102,13 @@ public class NewGroupActivity extends AppCompatActivity {
 
                 String gName = null;
                 String gDesc = null;
-                List<UserBean> selectedusers=new ArrayList<UserBean>();
+                selectedusers=new ArrayList<UserBean>();
                 GroupBean group;
-
-                GroupBean newGroup;
-
                 if(isEdit != 1) {
                     switch (item.getItemId()) {
                         case R.id.miSave:
 
                             try {
-
-
                                 gDesc=newGroupDetailsFragment.gDesc.getText().toString();
                                 gName=newGroupDetailsFragment.gName.getText().toString();
                                 selectedusers=peopleFragment.getSelectedusers();
@@ -114,7 +116,7 @@ public class NewGroupActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            group = new GroupBean(gName,gDesc,selectedusers);
+                            group = new GroupBean(gName,gDesc);
                             addNewGroup(group);
 
                             Toast.makeText(getApplicationContext(), "Group was made successfully", Toast.LENGTH_SHORT).show();
@@ -136,7 +138,7 @@ public class NewGroupActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            group = new GroupBean(eGroup.getId(),gName,gDesc,selectedusers,eGroup.getId());
+                            group = new GroupBean(eGroup.getId(),gName,gDesc,eGroup.getId());
                             editGroup(group);
 
 
@@ -153,16 +155,40 @@ public class NewGroupActivity extends AppCompatActivity {
     }
 
     private void addNewGroup(GroupBean group) {
+        Map<String,String> friendsInGroup = new HashMap<>();
 
-        String key=mDatabase.getInstance().getReference().child("usergroup").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
+        String key=mDatabase.getInstance().getReference().child(USERGROUP)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
         group.setId(key);
         group.setTopictoken(key);
-        mDatabase.getInstance().getReference().child("usergroup").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(group);
 
+        mDatabase.getInstance().getReference().child(USERGROUP)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(key).setValue(group);
+
+        for(UserBean friend: selectedusers) {
+            friendsInGroup.put("id", friend.getId());
+            mDatabase.getInstance().getReference().child(FRIENDSINGROUP)
+                    .child(key).push()
+                    .setValue(friendsInGroup);
+        }
     }
-    private void editGroup(GroupBean group) {
-         mDatabase.getInstance().getReference().child("usergroup").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(group.getId()).setValue(group);
+    private void editGroup(GroupBean group) {//cuvam grupu, ali moram i FRIENDSINGROUP UPDATE!!
+        Map<String,String> friendsInGroup = new HashMap<>();
 
+        mDatabase.getInstance().getReference().child(USERGROUP)
+                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                 .child(group.getId()).setValue(group);
+
+        FirebaseDatabase.getInstance().getReference().child(FRIENDSINGROUP)
+                .child(group.getId()).removeValue();
+
+        for(UserBean friend: selectedusers) {
+            friendsInGroup.put("id", friend.getId());
+            mDatabase.getInstance().getReference().child(FRIENDSINGROUP)
+                    .child(group.getId()).push()
+                    .setValue(friendsInGroup);
+        }
     }
 
     @Override

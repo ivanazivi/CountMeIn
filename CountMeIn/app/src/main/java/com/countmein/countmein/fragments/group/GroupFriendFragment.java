@@ -13,12 +13,17 @@ import android.widget.Toast;
 
 import com.countmein.countmein.R;
 import com.countmein.countmein.beans.GroupBean;
+import com.countmein.countmein.beans.IdBean;
 import com.countmein.countmein.beans.UserBean;
 import com.countmein.countmein.holders.PeopleViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,26 +33,18 @@ import java.util.List;
 
 public class GroupFriendFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
-
+    private static final String USERFRIENDS = "userfriends";
+    public static final String  FRIENDSINGROUP = "friendsingroup";
+    private static final String USERS = "users";
 
     public GroupBean eGroup;
     public int isEdit;
-
     public  View rootView;
-
     protected RecyclerView mRecyclerView;
-    private FirebaseRecyclerAdapter<UserBean,PeopleViewHolder> adapter;
+    private FirebaseRecyclerAdapter<IdBean,PeopleViewHolder> adapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-
-    public List<UserBean> getSelectedusers() {
-        return selectedusers;
-    }
-
-    public void setSelectedusers(List<UserBean> selectedusers) {
-        this.selectedusers = selectedusers;
-    }
-
     List<UserBean> selectedusers;
+    List<UserBean> friends;
 
     public  GroupFriendFragment() {
         // Required empty public constructor
@@ -56,7 +53,7 @@ public class GroupFriendFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        selectedusers=new ArrayList<>();
+        selectedusers = new ArrayList<>();
         //HomeActivity.toolbar.setTitle("Search people");
 
     }
@@ -71,6 +68,8 @@ public class GroupFriendFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         isEdit=0;
+        friends = new ArrayList<UserBean>();
+
         try {
             eGroup = (GroupBean) bundle.getSerializable("data");
             isEdit = bundle.getInt("isEdit");
@@ -79,30 +78,64 @@ public class GroupFriendFragment extends Fragment {
             e.printStackTrace();
         }
 
-        adapter  = new FirebaseRecyclerAdapter<UserBean,PeopleViewHolder>(UserBean.class,
-                R.layout.people_card_view,PeopleViewHolder.class, FirebaseDatabase.getInstance().getReference().child("userfriends").child(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+        adapter  = new FirebaseRecyclerAdapter<IdBean,PeopleViewHolder>(IdBean.class,
+                R.layout.people_card_view,PeopleViewHolder.class, FirebaseDatabase.getInstance().getReference().child(USERFRIENDS)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())){
 
             @Override
-            protected void populateViewHolder(final PeopleViewHolder viewHolder, UserBean model, int position) {
-                viewHolder.messageUser.setText(model.getUsername());
-                viewHolder.userPhoto.setImageURI(model.getPhotoUrl());
-                viewHolder.button.setVisibility(View.GONE);
-                viewHolder.checkBox.setTag(model);
-                if (isEdit == 1) {
-                    for(int i=0;i<eGroup.getFriends().size();i++){
-                        String friend_id = eGroup.getFriends().get(i).getId();
-                        String model_id = model.getId();
-                        Log.d("friend_did",friend_id);
-                        Log.d("model_id",model_id);
-                        if(friend_id.equals(model_id)){
-                            viewHolder.checkBox.setChecked(true);
-                            selectedusers.add(model);
+            protected void populateViewHolder(final PeopleViewHolder viewHolder, IdBean model, int position) {
+               // final List<UserBean> friends = new ArrayList<UserBean>();
+                FirebaseDatabase.getInstance().getReference().child(USERS)
+                        .child(model.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
 
+                        final UserBean friend = dataSnapshot.getValue(UserBean.class);
+                        friends.add(friend);
+                        viewHolder.messageUser.setText(friend.getUsername());
+                        viewHolder.userPhoto.setImageURI(friend.getPhotoUrl());
+                        viewHolder.button.setVisibility(View.GONE);
+                        viewHolder.checkBox.setTag(friend);
+
+                        try {
+                            FirebaseDatabase.getInstance().getReference().child(FRIENDSINGROUP)
+                                    .child(eGroup.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    IdBean friendInGroup = new IdBean();
+
+                                    for(DataSnapshot snap: dataSnapshot.getChildren()){
+                                        friendInGroup = snap.getValue(IdBean.class);
+                                    }
+
+                                    if (isEdit == 1) {
+                                        for(UserBean us: friends) {
+                                            String friend_id = friendInGroup.getId();
+                                            String model_id = us.getId();
+                                            if (friend_id.equals(model_id)) {
+                                                viewHolder.checkBox.setChecked(true);
+                                                selectedusers.add(friend);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        } catch (Exception e){
+                            e.printStackTrace();
                         }
-
                     }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
                 }
+            });
+
                 viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -133,9 +166,6 @@ public class GroupFriendFragment extends Fragment {
 
                     }
                 });
-
-
-
             }
         };
 
@@ -143,6 +173,14 @@ public class GroupFriendFragment extends Fragment {
         mRecyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    public List<UserBean> getSelectedusers() {
+        return selectedusers;
+    }
+
+    public void setSelectedusers(List<UserBean> selectedusers) {
+        this.selectedusers = selectedusers;
     }
 
 }
