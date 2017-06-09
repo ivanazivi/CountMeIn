@@ -2,6 +2,7 @@ package com.countmein.countmein.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -141,8 +142,26 @@ public class InvitedFragment extends Fragment {
                                             .child(key).setValue(myAttendings);
 
                                     FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITES)
-                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                            .child(model.getActivityId()).removeValue();
+                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            for(DataSnapshot snap: dataSnapshot.getChildren()){
+                                                User_ActivityBean uA = snap.getValue(User_ActivityBean.class);
+                                                if(model.getActivityId().equals(uA.getActivityId())){
+                                                    FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITES)
+                                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                            .child(snap.getKey()).removeValue();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
 
                                     FirebaseDatabase.getInstance().getReference().child(WHOISATTENDING)
                                             .push().setValue(userWhoAttends);

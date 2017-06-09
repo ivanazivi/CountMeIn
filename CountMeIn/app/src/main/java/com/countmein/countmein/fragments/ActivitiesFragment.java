@@ -18,7 +18,9 @@ import com.countmein.countmein.activities.NewActivityActivity;
 import com.countmein.countmein.activities.NewActivityActivity_;
 import com.countmein.countmein.activities.SelectedActivity;
 import com.countmein.countmein.beans.ActivityBean;
+import com.countmein.countmein.beans.IdBean;
 import com.countmein.countmein.beans.MockUpActivity;
+import com.countmein.countmein.beans.User_ActivityBean;
 import com.countmein.countmein.holders.ActivityViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -120,31 +122,38 @@ public class ActivitiesFragment extends Fragment {
                         final ActivityBean activity = (ActivityBean) view.getTag();
 
                         FirebaseDatabase.getInstance().getReference().child(GROUPINACTIVITY)
-                                .child(activity.getId()).removeValue();
+                                .child(activity.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                for(DataSnapshot snap: dataSnapshot.getChildren()){
+                                    IdBean id = snap.getValue(IdBean.class);
+                                    FirebaseDatabase.getInstance().getReference().child(GROUPINACTIVITY)
+                                            .child(activity.getId()).child(id.getId()).removeValue();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
                         FirebaseDatabase.getInstance().getReference().child(USERACTIVITIES)
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                 .child(activity.getId()).removeValue();
 
-                        FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITIES).addListenerForSingleValueEvent(new ValueEventListener() {
+                        FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITIES).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                messageMap = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Map<String,MockUpActivity>>>() {
-                                });
-                                if (messageMap != null) {
-                                    for (Map.Entry<String, Map<String,MockUpActivity> > set:messageMap.entrySet()) {
-                                        ArrayList<MockUpActivity> list= new ArrayList<MockUpActivity>(set.getValue().values());
-
-                                        for (int i = 0; i < list.size(); i++) {
-                                            if (list.get(i).getId().equals(activity.getId())) {
-                                                FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITIES)
-                                                        .child(set.getKey())
-                                                        .child(list.get(i).getId()).removeValue();
-                                            }
-                                        }
+                                for(DataSnapshot snap: dataSnapshot.getChildren()){
+                                    User_ActivityBean uA = snap.getValue(User_ActivityBean.class);
+                                    if(activity.getId().equals(uA.getActivityId())){
+                                        FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITIES)
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                .child(snap.getKey()).removeValue();
                                     }
-
                                 }
                             }
 
