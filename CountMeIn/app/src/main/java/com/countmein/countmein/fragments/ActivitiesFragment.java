@@ -37,10 +37,11 @@ import java.util.Map;
  */
 public class ActivitiesFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
-
+    public static final String GROUPINACTIVITY = "groupinactivity";
+    public static final String USERACTIVITIES = "useractivities";
+    public static final String INVITEDACTIVITIES = "invitedactivities";
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
-    //Map<String, MockUpActivity> messageMap = new HashMap<String, MockUpActivity>();
     View rootView;
     private FirebaseRecyclerAdapter<ActivityBean, ActivityViewHolder> adapter;
     Map<String, Map<String,MockUpActivity>> messageMap = new HashMap<String,Map<String,MockUpActivity> >();
@@ -116,10 +117,15 @@ public class ActivitiesFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         final ActivityBean activity = (ActivityBean) view.getTag();
-                        FirebaseDatabase.getInstance().getReference()
-                                .child("useractivities").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+
+                        FirebaseDatabase.getInstance().getReference().child(GROUPINACTIVITY)
                                 .child(activity.getId()).removeValue();
-                        FirebaseDatabase.getInstance().getReference().child("invitedactivities").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        FirebaseDatabase.getInstance().getReference().child(USERACTIVITIES)
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child(activity.getId()).removeValue();
+
+                        FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITIES).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -131,7 +137,7 @@ public class ActivitiesFragment extends Fragment {
 
                                         for (int i = 0; i < list.size(); i++) {
                                             if (list.get(i).getId().equals(activity.getId())) {
-                                                FirebaseDatabase.getInstance().getReference().child("invitedactivities")
+                                                FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITIES)
                                                         .child(set.getKey())
                                                         .child(list.get(i).getId()).removeValue();
                                             }

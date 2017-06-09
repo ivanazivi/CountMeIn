@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.countmein.countmein.R;
 import com.countmein.countmein.beans.ActivityBean;
+import com.countmein.countmein.beans.IdBean;
 import com.countmein.countmein.fragments.group.GroupAddActivityFragment;
 import com.countmein.countmein.fragments.other.DatePickerFragment;
 import com.countmein.countmein.fragments.other.LocationFragment;
@@ -28,8 +29,11 @@ import com.countmein.countmein.fragments.NewActivityDetailsFragment;
 import com.countmein.countmein.services.FcmNotificationBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -44,6 +48,8 @@ import java.util.Map;
 public class NewActivityActivity extends AppCompatActivity {
     public static final String GROUPINACTIVITY = "groupinactivity";
     public static final String USERACTIVITIES = "useractivities";
+    public static final String FRIENDSINGROUP = "friendsingroup";
+    public static final String INVITEDACTIVITIES = "invitedactivities";
     private DatabaseReference mDatabaseActivity;
     private FirebaseUser ccUser;
     public  ActivityBean eActivity;
@@ -203,7 +209,7 @@ public class NewActivityActivity extends AppCompatActivity {
     }
 
     @Background
-    public void addNewActivityAsaChild(ActivityBean newAct){
+    public void addNewActivityAsaChild(final ActivityBean newAct){
         ArrayList<String> tokens = new ArrayList<String>();
         Map<String,String> friendsInGroup = new HashMap<>();
         Map<String,String> newGroupInActivity;
@@ -219,19 +225,47 @@ public class NewActivityActivity extends AppCompatActivity {
                     .child(newAct.getId()).push().setValue(newGroupInActivity);
         }
 
-     /*   if(!newAct.getGroup().isEmpty()){
-            for(int i=0;i<newAct.getGroup().size();i++){
-                if(!newAct.getGroup().get(i).getFriends().isEmpty()){
-                    for(int j=0;j<newAct.getGroup().get(i).getFriends().size();j++){
-                        FirebaseDatabase.getInstance().getReference().child("invitedactivities")
-                                .child(newAct.getGroup().get(i).getFriends().get(j).getId())
-                                .child(newAct.getId()).setValue(newAct.convertMockUp());
-                    }
+        FirebaseDatabase.getInstance().getReference().child(GROUPINACTIVITY)
+                .child(newAct.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot snap: dataSnapshot.getChildren()){
+                    IdBean idGrupe = snap.getValue(IdBean.class);
+
+                    FirebaseDatabase.getInstance().getReference().child(FRIENDSINGROUP)
+                            .child(idGrupe.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        Map<String,String> sentActivityInvitation;
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            for(DataSnapshot snap: dataSnapshot.getChildren()){
+                                IdBean friendId = snap.getValue(IdBean.class);
+                                sentActivityInvitation = new HashMap<>();
+                                sentActivityInvitation.put("id", newAct.getId());
+
+                                FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITIES)
+                                        .child(friendId.getId()).push()
+                                        .setValue(sentActivityInvitation);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
-        }
-        int size = newAct.getGroup().size();
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+       /*
         for(int i=0; i<size; i++){
             Log.d("size", Integer.toString(newAct.getGroup().get(i).getFriends().size()));
             for(int j=0; j<newAct.getGroup().get(i).getFriends().size(); j++){
@@ -246,8 +280,8 @@ public class NewActivityActivity extends AppCompatActivity {
 
             }
         }
-        sendPushNotification(tokens);
-*/
+        sendPushNotification(tokens);*/
+
     }
 
     public void updateActivity(ActivityBean activity){
