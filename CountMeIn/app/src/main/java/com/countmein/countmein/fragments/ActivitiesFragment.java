@@ -65,7 +65,8 @@ public class ActivitiesFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         adapter = new FirebaseRecyclerAdapter<ActivityBean, ActivityViewHolder>(ActivityBean.class,
-                R.layout.single_card_view, ActivityViewHolder.class, FirebaseDatabase.getInstance().getReference().child("useractivities").child(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                R.layout.single_card_view, ActivityViewHolder.class, FirebaseDatabase.getInstance().getReference().child("useractivities")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
             @Override
             protected void populateViewHolder(ActivityViewHolder viewHolder, final ActivityBean model, int position) {

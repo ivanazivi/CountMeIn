@@ -35,8 +35,8 @@ public class NewActivityDetailsFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_new_activity_details, container, false);
         Bundle bundle = this.getArguments();
-        aDesc=(EditText) rootView.findViewById(R.id.activityName);
-        aName=(EditText) rootView.findViewById(R.id.activityDesc);
+        aName=(EditText) rootView.findViewById(R.id.activityName);
+        aDesc=(EditText) rootView.findViewById(R.id.activityDesc);
 
         try {
             eActivity = (ActivityBean) bundle.getSerializable("data");
