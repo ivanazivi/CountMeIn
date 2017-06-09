@@ -1,5 +1,6 @@
 package com.countmein.countmein.services;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.countmein.countmein.R;
+import com.countmein.countmein.activities.HomeActivity;
 import com.countmein.countmein.activities.SelectedActivity;
 import com.countmein.countmein.eventBus.PushNotificationEvent;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -48,10 +50,10 @@ public class MyAndroidFirebaseMessagingService extends FirebaseMessagingService 
                                      String receiver,
                                      String receiverUid,
                                      String firebaseToken) {
-        Intent intent = new Intent( this , SelectedActivity. class );
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent = new Intent( this , HomeActivity.class );
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent resultIntent = PendingIntent.getActivity( this , 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                0);
 
         Uri notificationSoundURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder( this)
