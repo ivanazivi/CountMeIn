@@ -149,6 +149,8 @@ public class NewActivityActivity extends AppCompatActivity {
 
                             Intent jj = new Intent(NewActivityActivity.this, HomeActivity_.class);
                             startActivity(jj);
+                            ArrayList<String> tokens = new ArrayList<String>();
+                            sendPushNotification(tokens);
 
                             finish();
                             break;
