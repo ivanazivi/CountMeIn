@@ -25,11 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 
 public class GroupFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "RecyclerViewFragment";
+    public static final String  USERGROUP = "usergroup";
+    public static final String  FRIENDSINGROUP = "friendsingroup";
 
     protected RecyclerView mRecyclerView;
     private FirebaseRecyclerAdapter<GroupBean,ActivityViewHolder> adapter;
@@ -72,8 +70,6 @@ public class GroupFragment extends Fragment {
                 viewHolder.vDate.setVisibility(View.GONE);
                 viewHolder.cv.findViewById(R.id.layout_checkbox).setVisibility(View.GONE);
 
-
-
                 LinearLayout ln = (LinearLayout) viewHolder.cv.findViewById(R.id.text_container);
                 ImageButton btnEdit = (ImageButton) viewHolder.cv.findViewById(R.id.activity_edit);
                 ImageButton btnDelete = (ImageButton) viewHolder.cv.findViewById(R.id.activity_delete);
@@ -113,20 +109,25 @@ public class GroupFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         GroupBean group=(GroupBean) view.getTag();
-                        FirebaseDatabase.getInstance().getReference().child("usergroup").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(group.getId()).removeValue();
+
+                        try{
+                            FirebaseDatabase.getInstance().getReference().child(FRIENDSINGROUP)
+                                    .child(group.getId()).removeValue();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
+                        FirebaseDatabase.getInstance().getReference().child(USERGROUP)
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child(group.getId()).removeValue();
                     }
                 });
-
-
             }
         };
 
         // Set CustomAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(adapter);
 
-
         return rootView;
     }
-
-
 }

@@ -45,6 +45,7 @@ public class NewGroupActivity extends AppCompatActivity {
     public List<UserBean> selectedusers;
     private NewGroupActivity.SectionsPagerAdapter mSectionsPagerAdapter;
 
+
     private ViewPager mViewPager;
 
     @Override
@@ -54,7 +55,6 @@ public class NewGroupActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         newGroupDetailsFragment=new NewGroupDetailsFragment();
         peopleFragment=new GroupFriendFragment();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitle(R.string.new_group);
 
@@ -99,7 +99,6 @@ public class NewGroupActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
                 String gName = null;
                 String gDesc = null;
                 selectedusers=new ArrayList<UserBean>();
@@ -141,17 +140,18 @@ public class NewGroupActivity extends AppCompatActivity {
                             group = new GroupBean(eGroup.getId(),gName,gDesc,eGroup.getId());
                             editGroup(group);
 
-
                             Toast.makeText(getApplicationContext(), "Group was made successfully", Toast.LENGTH_SHORT).show();
                             finish();
-
                     }
                 }
                 return false;
             }
         });
+    }
 
-
+    @Override
+    public void onStart(){
+        super.onStart();
     }
 
     private void addNewGroup(GroupBean group) {
@@ -173,6 +173,7 @@ public class NewGroupActivity extends AppCompatActivity {
                     .setValue(friendsInGroup);
         }
     }
+
     private void editGroup(GroupBean group) {//cuvam grupu, ali moram i FRIENDSINGROUP UPDATE!!
         Map<String,String> friendsInGroup = new HashMap<>();
 
@@ -197,12 +198,6 @@ public class NewGroupActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-    }
-
 
 
     private class SectionsPagerAdapter extends FragmentPagerAdapter {

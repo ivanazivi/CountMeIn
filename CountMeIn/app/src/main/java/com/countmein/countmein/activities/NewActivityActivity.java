@@ -43,6 +43,7 @@ import java.util.Map;
 @EActivity(R.layout.activity_new_activity)
 public class NewActivityActivity extends AppCompatActivity {
     public static final String GROUPINACTIVITY = "groupinactivity";
+    public static final String USERACTIVITIES = "useractivities";
     private DatabaseReference mDatabaseActivity;
     private FirebaseUser ccUser;
     public  ActivityBean eActivity;
@@ -213,8 +214,9 @@ public class NewActivityActivity extends AppCompatActivity {
 
         for(String groupId: mapOfselectedGroups) {
             newGroupInActivity = new HashMap<>();
+            newGroupInActivity.put("id", groupId);
             FirebaseDatabase.getInstance().getReference().child(GROUPINACTIVITY)
-                    .child(newAct.getId()).push().setValue(newGroupInActivity.put("id", groupId));
+                    .child(newAct.getId()).push().setValue(newGroupInActivity);
         }
 
      /*   if(!newAct.getGroup().isEmpty()){
@@ -249,9 +251,22 @@ public class NewActivityActivity extends AppCompatActivity {
     }
 
     public void updateActivity(ActivityBean activity){
-        FirebaseDatabase.getInstance().getReference()
-                .child("useractivities").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(activity.getId())
+        Map<String,String> newGroupInActivity;
+
+        FirebaseDatabase.getInstance().getReference().child(USERACTIVITIES)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(activity.getId())
                 .setValue(activity);
+
+        FirebaseDatabase.getInstance().getReference().child(GROUPINACTIVITY)
+                .child(activity.getId()).removeValue();
+
+        for(String groupId: mapOfselectedGroups) {
+            newGroupInActivity = new HashMap<>();
+            newGroupInActivity.put("id", groupId);
+            FirebaseDatabase.getInstance().getReference().child(GROUPINACTIVITY)
+                    .child(activity.getId()).push().setValue(newGroupInActivity);
+        }
     }
 
     private class SectionsPagerAdapter extends FragmentPagerAdapter {

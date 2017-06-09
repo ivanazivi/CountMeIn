@@ -45,6 +45,7 @@ public class GroupFriendFragment extends Fragment {
     protected RecyclerView.LayoutManager mLayoutManager;
     List<UserBean> selectedusers;
     List<UserBean> friends;
+    List<CheckBox> checkBoxes;
 
     public  GroupFriendFragment() {
         // Required empty public constructor
@@ -69,6 +70,7 @@ public class GroupFriendFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         isEdit=0;
         friends = new ArrayList<UserBean>();
+        checkBoxes = new ArrayList<>();
 
         try {
             eGroup = (GroupBean) bundle.getSerializable("data");
@@ -84,7 +86,6 @@ public class GroupFriendFragment extends Fragment {
 
             @Override
             protected void populateViewHolder(final PeopleViewHolder viewHolder, IdBean model, int position) {
-               // final List<UserBean> friends = new ArrayList<UserBean>();
                 FirebaseDatabase.getInstance().getReference().child(USERS)
                         .child(model.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -95,26 +96,37 @@ public class GroupFriendFragment extends Fragment {
                         viewHolder.messageUser.setText(friend.getUsername());
                         viewHolder.userPhoto.setImageURI(friend.getPhotoUrl());
                         viewHolder.button.setVisibility(View.GONE);
-                        viewHolder.checkBox.setTag(friend);
+                        CheckBox bx = viewHolder.checkBox;
+                        bx.setTag(friend);
+                        checkBoxes.add(bx);
+
 
                         try {
                             FirebaseDatabase.getInstance().getReference().child(FRIENDSINGROUP)
                                     .child(eGroup.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     IdBean friendInGroup = new IdBean();
+                                    String friend_id;
+                                    String model_id;
 
-                                    for(DataSnapshot snap: dataSnapshot.getChildren()){
+                                    for(DataSnapshot snap: dataSnapshot.getChildren()) {
                                         friendInGroup = snap.getValue(IdBean.class);
-                                    }
 
-                                    if (isEdit == 1) {
-                                        for(UserBean us: friends) {
-                                            String friend_id = friendInGroup.getId();
-                                            String model_id = us.getId();
-                                            if (friend_id.equals(model_id)) {
-                                                viewHolder.checkBox.setChecked(true);
-                                                selectedusers.add(friend);
+                                        if (isEdit == 1) {
+                                            for (int k = 0; k < friends.size(); k++) {
+                                                try {
+                                                    friend_id = friendInGroup.getId();
+                                                    model_id = friends.get(k).getId();
+                                                    if (friend_id.equals(model_id) && !selectedusers.contains(friends.get(k))) {
+                                                        checkBoxes.get(k).setChecked(true);
+                                                        selectedusers.add(friends.get(k));
+                                                    }
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+
                                             }
                                         }
                                     }
@@ -162,7 +174,6 @@ public class GroupFriendFragment extends Fragment {
                             }
 
                         }
-
 
                     }
                 });

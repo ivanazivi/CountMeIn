@@ -43,7 +43,8 @@ public class GroupAddActivityFragment extends Fragment {
     protected RecyclerView mRecyclerView;
     private FirebaseRecyclerAdapter<GroupBean,ActivityViewHolder> adapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    List<String> selectedgroups;
+    public List<String> selectedgroups;
+    List<GroupBean> groupList;
 
     public GroupAddActivityFragment() {
 
@@ -67,6 +68,7 @@ public class GroupAddActivityFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        groupList = new ArrayList<>();
 
         try {
             eActivity = (ActivityBean) bundle.getSerializable("data");
@@ -96,12 +98,15 @@ public class GroupAddActivityFragment extends Fragment {
                             .child(eActivity.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            IdBean groupID = dataSnapshot.getValue(IdBean.class);
 
-                            if (isEdit == 1) {
-                                if (groupID.getId().equals(model.getId())) {
-                                    viewHolder.checkBox.setChecked(true);
-                                    selectedgroups.add(model.getId());
+                            for (DataSnapshot snap : dataSnapshot.getChildren()){
+                                IdBean groupID = snap.getValue(IdBean.class);
+
+                                if (isEdit == 1) {
+                                    if (groupID.getId().equals(model.getId())) {
+                                        viewHolder.checkBox.setChecked(true);
+                                        selectedgroups.add(model.getId());
+                                    }
                                 }
                             }
                         }

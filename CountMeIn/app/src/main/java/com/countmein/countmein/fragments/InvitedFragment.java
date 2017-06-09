@@ -39,7 +39,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class InvitedFragment extends Fragment {
 
     private static final String TAG = "RecyclerViewFragment";
-
+    public static final String INVITEDACTIVITES = "invitedactivities";
     protected RecyclerView mRecyclerView;
 
     protected RecyclerView.LayoutManager mLayoutManager;
@@ -66,7 +66,8 @@ public class InvitedFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         adapter  = new FirebaseRecyclerAdapter<MockUpActivity,ActivityViewHolder >(MockUpActivity.class,
-                R.layout.single_card_view,ActivityViewHolder.class, FirebaseDatabase.getInstance().getReference().child("invitedactivities").child(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                R.layout.single_card_view,ActivityViewHolder.class, FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITES)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
             @Override
             protected void populateViewHolder(ActivityViewHolder viewHolder, final MockUpActivity model, int position) {
@@ -138,14 +139,6 @@ public class InvitedFragment extends Fragment {
         // Set CustomAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(adapter);
 
-
-
-
         return rootView;
     }
-
-
-
-
-
 }
