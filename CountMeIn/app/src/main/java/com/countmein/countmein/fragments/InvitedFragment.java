@@ -86,12 +86,12 @@ public class InvitedFragment extends Fragment {
             protected void populateViewHolder(final ActivityViewHolder viewHolder, final User_ActivityBean model, int position) {
 
                 FirebaseDatabase.getInstance().getReference().child(USERACTIVITIES)
-                        .child(model.userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        .child(model.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        for(DataSnapshot snap: dataSnapshot.getChildren()) {
+                        for (DataSnapshot snap : dataSnapshot.getChildren()) {
                             ActivityBean act = snap.getValue(ActivityBean.class);
                             viewHolder.vName.setText(act.getName());
                             viewHolder.vDescription.setText(act.getDescription());
@@ -105,6 +105,53 @@ public class InvitedFragment extends Fragment {
                             ln = (LinearLayout) viewHolder.cv.findViewById(R.id.text_container);
                             btnAttending.setTag(act);
                             ln.setTag(act);
+
+                            ln.setOnClickListener(new View.OnClickListener(){
+
+                                @Override
+                                public void onClick(View view){
+                                    ActivityBean activity=(ActivityBean) view.getTag();
+                                    Intent i = new Intent(view.getContext(), SelectedActivity.class);
+                                    Bundle data= new Bundle();
+                                    data.putSerializable("data",activity);
+                                    i.putExtras(data);
+                                    view.getContext().startActivity(i);
+                                }
+                            });
+
+                            btnAttending.setOnClickListener(new View.OnClickListener(){
+                                @Override
+                                public void onClick(View view) {
+                                    ActivityBean activity=(ActivityBean) view.getTag();
+                                    Map<String, String> userWhoAttends = new HashMap<String, String>();
+                                    Map<String, String> myAttendings = new HashMap<String, String>();
+
+                                    userWhoAttends.put("activityId", model.getActivityId());
+                                    userWhoAttends.put("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                    userWhoAttends.put("ownerId", model.getUserId());
+                                    myAttendings.put("activityId", model.getActivityId());
+                                    myAttendings.put("userId", model.getUserId());
+
+                                    String key = FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
+                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                            .push().getKey();
+
+                                    FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
+                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                            .child(key).setValue(myAttendings);
+
+                                    FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITES)
+                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                            .child(model.getActivityId()).removeValue();
+
+                                    FirebaseDatabase.getInstance().getReference().child(WHOISATTENDING)
+                                            .push().setValue(userWhoAttends);
+
+                                    Toast.makeText(getApplicationContext(), "You are attending "+activity.getName(), Toast.LENGTH_SHORT).show();
+
+                                }
+
+                            });
                         }
                     }
 
@@ -114,52 +161,6 @@ public class InvitedFragment extends Fragment {
                     }
                 });
 
-                ln.setOnClickListener(new View.OnClickListener(){
-
-                    @Override
-                    public void onClick(View view){
-                        ActivityBean activity=(ActivityBean) view.getTag();
-                        Intent i = new Intent(view.getContext(), SelectedActivity.class);
-                        Bundle data= new Bundle();
-                        data.putSerializable("data",activity);
-                        i.putExtras(data);
-                        view.getContext().startActivity(i);
-                    }
-                });
-
-                btnAttending.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View view) {
-                        ActivityBean activity=(ActivityBean) view.getTag();
-                        Map<String, String> userWhoAttends = new HashMap<String, String>();
-                        Map<String, String> myAttendings = new HashMap<String, String>();
-
-                        userWhoAttends.put("activityId", model.getActivityId());
-                        userWhoAttends.put("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                        userWhoAttends.put("ownerId", model.getUserId());
-                        myAttendings.put("activityId", model.getActivityId());
-                        myAttendings.put("userId", model.getUserId());
-
-                        String key = FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .push().getKey();
-
-                        FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .child(key).setValue(myAttendings);
-
-                        FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITES)
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .child(key).removeValue();
-
-                        FirebaseDatabase.getInstance().getReference().child(WHOISATTENDING)
-                                .push().setValue(userWhoAttends);
-
-                        Toast.makeText(getApplicationContext(), "You are attending "+activity.getName(), Toast.LENGTH_SHORT).show();
-
-                    }
-
-                });
             }
         };
 

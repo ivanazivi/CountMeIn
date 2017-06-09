@@ -91,56 +91,56 @@ public class AttendingActivitiesFragment extends Fragment {
                             ln = (LinearLayout) viewHolder.cv.findViewById(R.id.text_container);
                             btnQuit.setTag(act);
                             ln.setTag(act);
+
+                            ln.setOnClickListener(new View.OnClickListener(){
+
+                                @Override
+                                public void onClick(View view){
+                                    ActivityBean activity=(ActivityBean) view.getTag();
+                                    Intent i = new Intent(view.getContext(), SelectedActivity.class);
+                                    Bundle data= new Bundle();
+                                    data.putSerializable("data",activity);
+                                    i.putExtras(data);
+                                    view.getContext().startActivity(i);
+                                }
+                            });
+
+                            btnQuit.setOnClickListener(new View.OnClickListener(){
+
+                                @Override
+                                public void onClick(View view) {
+                    /*    FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child(model.getId()).removeValue();
+*/
+                                    FirebaseDatabase.getInstance().getReference()
+                                            .child("whoisattending").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                WhoAttendsBean appid = snapshot.getValue(WhoAttendsBean.class);
+                                                if (appid.activityId.equals(model.getActivityId())) {
+                                                    FirebaseDatabase.getInstance().getReference()
+                                                            .child("whoisattending")
+                                                            .child(snapshot.getKey()).removeValue();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+                            });
                         }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
-
-                ln.setOnClickListener(new View.OnClickListener(){
-
-                    @Override
-                    public void onClick(View view){
-                    ActivityBean activity=(ActivityBean) view.getTag();
-                    Intent i = new Intent(view.getContext(), SelectedActivity.class);
-                    Bundle data= new Bundle();
-                    data.putSerializable("data",activity);
-                    i.putExtras(data);
-                    view.getContext().startActivity(i);
-                    }
-                });
-
-                btnQuit.setOnClickListener(new View.OnClickListener(){
-
-                    @Override
-                    public void onClick(View view) {
-                    /*    FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .child(model.getId()).removeValue();
-*/
-                        FirebaseDatabase.getInstance().getReference()
-                                .child("whoisattending").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    WhoAttendsBean appid = snapshot.getValue(WhoAttendsBean.class);
-                                    if (appid.activityId.equals(model.getActivityId())) {
-                                        FirebaseDatabase.getInstance().getReference()
-                                                .child("whoisattending")
-                                                .child(snapshot.getKey()).removeValue();
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
                     }
                 });
             }
