@@ -251,8 +251,8 @@ public class HomeActivity extends AppCompatActivity
             fragmentTransaction.commit();
 
             //set specific floating action
-            // FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            // fab.hide();
+             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+             fab.hide();
 
         } else if(id == R.id.nav_about){
             AboutFragment fragment = new AboutFragment();
