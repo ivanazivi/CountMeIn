@@ -99,7 +99,6 @@ public class NewGroupActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
                 String gName = null;
                 String gDesc = null;
                 selectedusers=new ArrayList<UserBean>();

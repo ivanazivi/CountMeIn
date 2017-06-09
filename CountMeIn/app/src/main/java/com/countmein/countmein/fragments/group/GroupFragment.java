@@ -122,17 +122,12 @@ public class GroupFragment extends Fragment {
                                 .child(group.getId()).removeValue();
                     }
                 });
-
-
             }
         };
 
         // Set CustomAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(adapter);
 
-
         return rootView;
     }
-
-
 }
