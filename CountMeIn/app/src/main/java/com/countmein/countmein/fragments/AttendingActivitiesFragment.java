@@ -78,7 +78,7 @@ public class AttendingActivitiesFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         for(DataSnapshot snap: dataSnapshot.getChildren()) {
-                            ActivityBean act = snap.getValue(ActivityBean.class);
+                           final  ActivityBean act = snap.getValue(ActivityBean.class);
                             viewHolder.vName.setText(act.getName());
                             viewHolder.vDescription.setText(act.getDescription());
                             viewHolder.vDate.setText(act.getDate());
@@ -109,10 +109,27 @@ public class AttendingActivitiesFragment extends Fragment {
 
                                 @Override
                                 public void onClick(View view) {
-                    /*    FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .child(model.getId()).removeValue();
-*/
+                                    FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
+                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            for(DataSnapshot snap: dataSnapshot.getChildren()){
+                                                User_ActivityBean uA = snap.getValue(User_ActivityBean.class);
+                                                if(act.getId().equals(uA.getActivityId())){
+                                                    FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
+                                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                            .child(snap.getKey()).removeValue();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
                                     FirebaseDatabase.getInstance().getReference()
                                             .child("whoisattending").addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
