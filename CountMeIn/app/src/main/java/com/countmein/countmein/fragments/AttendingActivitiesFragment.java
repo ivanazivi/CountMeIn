@@ -16,6 +16,7 @@ import com.countmein.countmein.activities.HomeActivity_;
 import com.countmein.countmein.activities.SelectedActivity;
 import com.countmein.countmein.beans.ActivityBean;
 import com.countmein.countmein.beans.IdBean;
+import com.countmein.countmein.beans.User_ActivityBean;
 import com.countmein.countmein.beans.WhoAttendsBean;
 import com.countmein.countmein.beans.MockUpActivity;
 import com.countmein.countmein.holders.ActivityViewHolder;
@@ -39,7 +40,7 @@ public class AttendingActivitiesFragment extends Fragment {
 
     protected RecyclerView.LayoutManager mLayoutManager;
     protected List<ActivityBean> activities;
-    private FirebaseRecyclerAdapter<IdBean,ActivityViewHolder > adapter;
+    private FirebaseRecyclerAdapter<User_ActivityBean,ActivityViewHolder > adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -61,7 +62,7 @@ public class AttendingActivitiesFragment extends Fragment {
         // elements are laid out.
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        adapter  = new FirebaseRecyclerAdapter<IdBean,ActivityViewHolder >(IdBean.class,
+        adapter  = new FirebaseRecyclerAdapter<User_ActivityBean,ActivityViewHolder >(User_ActivityBean.class,
                 R.layout.single_card_view,ActivityViewHolder.class, FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
@@ -69,10 +70,10 @@ public class AttendingActivitiesFragment extends Fragment {
             LinearLayout ln;
 
             @Override
-            protected void populateViewHolder(final ActivityViewHolder viewHolder, final IdBean model, int position) {
+            protected void populateViewHolder(final ActivityViewHolder viewHolder, final User_ActivityBean model, int position) {
 
                 FirebaseDatabase.getInstance().getReference().child(USERACTIVITIES)
-                        .child(model.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        .child(model.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -116,10 +117,10 @@ public class AttendingActivitiesFragment extends Fragment {
 
                     @Override
                     public void onClick(View view) {
-                        FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
+                    /*    FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                 .child(model.getId()).removeValue();
-
+*/
                         FirebaseDatabase.getInstance().getReference()
                                 .child("whoisattending").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -127,7 +128,7 @@ public class AttendingActivitiesFragment extends Fragment {
 
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     WhoAttendsBean appid = snapshot.getValue(WhoAttendsBean.class);
-                                    if (appid.activityId.equals(model.getId())) {
+                                    if (appid.activityId.equals(model.getActivityId())) {
                                         FirebaseDatabase.getInstance().getReference()
                                                 .child("whoisattending")
                                                 .child(snapshot.getKey()).removeValue();

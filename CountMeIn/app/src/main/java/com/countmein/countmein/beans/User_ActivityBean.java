@@ -1,26 +1,23 @@
 package com.countmein.countmein.beans;
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
- * Created by sweet_000 on 6/6/2017.
+ * Created by sweet_000 on 6/9/2017.
  */
 
-public class WhoAttendsBean implements Serializable {
+public class User_ActivityBean implements Serializable {
 
     public String activityId;
     public String userId;
-    public String ownerId;
 
-    public WhoAttendsBean(){
+    public User_ActivityBean(){
 
     }
 
-    public WhoAttendsBean(String activity, String userId, String ownerId){
+    public User_ActivityBean(String activity, String userId){
         this.activityId = activity;
         this.userId = userId;
-        this.ownerId = ownerId;
 
     }
 
@@ -39,12 +36,5 @@ public class WhoAttendsBean implements Serializable {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-
-    public String getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
-    }
 }
+

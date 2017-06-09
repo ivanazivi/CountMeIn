@@ -22,6 +22,8 @@ import com.countmein.countmein.beans.ActivityBean;
 import com.countmein.countmein.beans.IdBean;
 import com.countmein.countmein.beans.MockUpActivity;
 import com.countmein.countmein.beans.UserBean;
+import com.countmein.countmein.beans.User_ActivityBean;
+import com.countmein.countmein.beans.WhoAttendsBean;
 import com.countmein.countmein.holders.ActivityViewHolder;
 import com.countmein.countmein.listeners.RecyclerItemClickListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -52,7 +54,7 @@ public class InvitedFragment extends Fragment {
 
     protected RecyclerView.LayoutManager mLayoutManager;
     protected List<ActivityBean> activities;
-    private FirebaseRecyclerAdapter<IdBean,ActivityViewHolder > adapter;
+    private FirebaseRecyclerAdapter<User_ActivityBean,ActivityViewHolder > adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -73,18 +75,18 @@ public class InvitedFragment extends Fragment {
         // elements are laid out.
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        adapter  = new FirebaseRecyclerAdapter<IdBean,ActivityViewHolder >(IdBean.class,
-                R.layout.single_card_view,ActivityViewHolder.class, FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITES)
+        adapter  = new FirebaseRecyclerAdapter<User_ActivityBean,ActivityViewHolder >(User_ActivityBean.class,
+                R.layout.single_card_view, ActivityViewHolder.class, FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITES)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
             ImageButton btnAttending;
             LinearLayout ln;
 
             @Override
-            protected void populateViewHolder(final ActivityViewHolder viewHolder, final IdBean model, int position) {
+            protected void populateViewHolder(final ActivityViewHolder viewHolder, final User_ActivityBean model, int position) {
 
                 FirebaseDatabase.getInstance().getReference().child(USERACTIVITIES)
-                        .child(model.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        .child(model.userId).addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -130,16 +132,25 @@ public class InvitedFragment extends Fragment {
                     public void onClick(View view) {
                         ActivityBean activity=(ActivityBean) view.getTag();
                         Map<String, String> userWhoAttends = new HashMap<String, String>();
-                        userWhoAttends.put("activityId", model.getId());
+                        Map<String, String> myAttendings = new HashMap<String, String>();
+
+                        userWhoAttends.put("activityId", model.getActivityId());
                         userWhoAttends.put("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        userWhoAttends.put("ownerId", model.getUserId());
+                        myAttendings.put("activityId", model.getActivityId());
+                        myAttendings.put("userId", model.getUserId());
+
+                        String key = FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .push().getKey();
 
                         FirebaseDatabase.getInstance().getReference().child(ATTENDINGACTIVITIES)
                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .child(model.getId()).setValue(model);
+                                .child(key).setValue(myAttendings);
 
                         FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITES)
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .child(model.getId()).removeValue();
+                                .child(key).removeValue();
 
                         FirebaseDatabase.getInstance().getReference().child(WHOISATTENDING)
                                 .push().setValue(userWhoAttends);

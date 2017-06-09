@@ -243,7 +243,8 @@ public class NewActivityActivity extends AppCompatActivity {
                             for(DataSnapshot snap: dataSnapshot.getChildren()){
                                 IdBean friendId = snap.getValue(IdBean.class);
                                 sentActivityInvitation = new HashMap<>();
-                                sentActivityInvitation.put("id", newAct.getId());
+                                sentActivityInvitation.put("activityId", newAct.getId());
+                                sentActivityInvitation.put("userId",ccUser.getUid());
 
                                 FirebaseDatabase.getInstance().getReference().child(INVITEDACTIVITIES)
                                         .child(friendId.getId()).push()
